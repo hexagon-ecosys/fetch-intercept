@@ -19,10 +19,13 @@ function interceptor(fetch, ...args) {
   // Register fetch call
   promise = promise.then(args => {
     const request = new Request(...args);
+    const config = args[1];
     return fetch(request).then(response => {
+      response.requestConfig = config;
       response.request = request;
       return response;
     }).catch(error => {
+      error.requestConfig = config;
       error.request = request;
       return Promise.reject(error);
     });
